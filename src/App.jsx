@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {useEffect, useState} from "react";
+import ProductList from "./components/ProductList.jsx";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await fetch("/api/products")
+                if (!res.ok) throw new Error("Failed to fetch products")
+                const data = await res.json();
+                setProducts(data);
+            } catch (e) {
+                setError(e.message);
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchProducts();
+    }, []);
+
+    return (<div className="min-h-screen bg-gray-100 p-6">
+        <h1 className="text-3xl font-bold mb-6">🛒 Product Catalog</h1>
+        {loading && <p>Loading...</p>}
+        {error && <div className="error"> ❌{error} </div>}
+
+        <ProductList products={products}/>
+    </div>)
 }
 
-export default App
+export default App;
