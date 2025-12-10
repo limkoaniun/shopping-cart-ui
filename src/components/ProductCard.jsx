@@ -4,7 +4,7 @@ const ProductCard = ({product}) => {
     const {addToCart} = useCart();
 
     return (<div className="bg-white rounded-lg shadow p-4 flex flex-col">
-        <img src={product.image} alt={product.name} className="h-40 object-cover rounded mb-4"/>
+        <img src={product.image} alt={product.name} className="h-full w-full object-cover rounded mb-4"/>
         <h2 className="text-xl font-semibold">
             {product.name}
         </h2>
